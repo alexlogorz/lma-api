@@ -3,7 +3,7 @@ import { hasPurchased, getCourseById } from "./utils.js";
 import cors from "cors";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 80;
 const allowedOrigins = ["https://6890gr-qk.myshopify.com/", "http://localhost:3000/"];
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));

@@ -1,6 +1,6 @@
 # LMA API - Latin Mix Academy
 
-LMA API is a backend service for the Latin Mix Academy (LMA) Shopify store, built with Node.js and Express. The API integrates with Airtable and Shopify to manage store data and streamline various operations. This API also allows customers to check purchase history and fetch course details from the store.
+LMA API is a backend service for the Latin Mix Academy (LMA) Shopify store, built with Node.js and Express. The API integrates with Airtable and Shopify to manage store data and streamline various operations.
 
 ## Features
 - **Airtable API Integration**: Retrieve and manage data from Airtable to keep LMA's operations seamless.
