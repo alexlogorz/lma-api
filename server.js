@@ -1,10 +1,31 @@
 import express from "express";
 import { hasPurchased, getCourseById } from "./utils.js";
 import cors from "cors";
+import fs from "fs";
+import https from "https";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 80;
-const allowedOrigins = ["https://6890gr-qk.myshopify.com/", "http://localhost:3000/"];
+const allowedOrigins = ["https://latinmixacademy.com/", "http://localhost:3000/"];
+const PORT = process.env.PORT || 3000; 
+const isProduction = process.env.NODE_ENV === "production";
+
+let server;
+
+if (isProduction) { 
+    // Load SSL certificate and private key
+    const options = {
+        key: fs.readFileSync(process.env.SSL_KEY_PATH),
+        cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+    };
+
+    server = https.createServer(options, app);
+}
+else {
+    server = app;
+}
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
@@ -43,6 +64,6 @@ app.get("/course/:id", async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
