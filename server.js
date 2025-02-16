@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const allowedOrigins = ["https://api.latinmixacademy.com/", "http://localhost:3000/"];
+const allowedOrigins = ["https://latinmixacademy.com/", "http://localhost:3000/", "https://api.latinmixacademy.com/"];
 const PORT = process.env.PORT || 3000; 
 const isProduction = process.env.NODE_ENV === "production";
 
