@@ -48,11 +48,9 @@ const verifyShopifySignature = (req, res, next) => {
 
 	// Compare signatures securely
         if (!crypto.timingSafeEqual(Buffer.from(calculatedSignature, "utf8"), Buffer.from(signature, "utf8"))) {
-            console.log('Invalid Shopify signature');
             return res.status(403).send("Invalid signature");
         }
 
-	console.log("Shopify request verified");
 	// Proceed
 	next()
 }
@@ -94,6 +92,19 @@ app.get("/course/:id", async (req, res) => {
     catch (error) {
         console.error("Error fetching course:", error);
         res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Get student details by ID
+app.get("/student/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const student = await getStudentById(id);
+        res.status(200).json(student);
+    } 
+    catch (error) {
+        res.status(500).json(error.message);
     }
 });
 

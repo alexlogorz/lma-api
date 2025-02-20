@@ -8,7 +8,7 @@ dotenv.config();
 const base = new Airtable({ apiKey: process.env.AIRTABLE_ACCESS_TOKEN }).base(process.env.AIRTABLE_BASE_ID);
 
 async function hasPurchased(customerId, productId) {
-  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;  // Access token from env
+  const accessToken = process.env.APP_CLIENT_ID;  // Api key from appv
   const shopDomain = process.env.SHOPIFY_STORE;  // Store domain (e.g., mystore.myshopify.com)
   
   const url = `https://${shopDomain}/admin/api/2023-01/orders.json`;
@@ -71,4 +71,35 @@ async function getCourseById(programId) {
     }
 }
 
-export { hasPurchased, getCourseById };
+// Get student details by id
+async function getStudentById(studentId) {
+    try {
+        const records = await base('Students').select({
+            view: 'Student Details'
+        }).all();
+
+        const filteredRecords = records.filter(record => record.fields['Student ID'] === studentId);
+
+        if(filteredRecords.length > 0) {
+            const student = filteredRecords[0].fields;
+
+            // Fetch lessons data
+            if (student.Lessons && student.Lessons.length > 0) {
+              const lessonPromises = student.Lessons.map(lessonId => base('Lessons').find(lessonId));
+              const lessons = await Promise.all(lessonPromises);
+
+              student.Lessons = lessons.map(lesson => lesson.fields);
+            }
+
+            return student;
+        }
+        else {
+            throw new Error('Student not found');
+        }
+    }
+    catch (error) {
+        throw error;  // Rethrow the error for handling in the calling function
+    }
+}
+
+export { hasPurchased, getCourseById, getStudentById };
