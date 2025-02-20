@@ -4,6 +4,7 @@ import cors from "cors";
 import fs from "fs";
 import https from "https";
 import dotenv from "dotenv";
+import crypto from "crypto"
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app = express();
 const allowedOrigins = ["https://latinmixacademy.com", "http://localhost:3000/"];
 const PORT = process.env.PORT || 3000; 
 const isProduction = process.env.NODE_ENV === "production";
+const APP_CLIENT_SECRET = process.env.APP_CLIENT_SECRET || 'hush'
 
 let server;
 
@@ -27,10 +29,41 @@ else {
     server = app;
 }
 
+// Middle to parse json data
+app.use(express.json())
+
+// Middleware to verify shopify requests
+const verifyShopifySignature = (req, res, next) => {
+	const query = { ...req.query }
+	const signature = query.signature
+
+	if(!signature) {
+	   return res.status(403).json({ error: "Missing signature" })
+	}
+
+	delete query.signature
+
+	const sortedParams = Object.keys(query).sort().map(key => `${key}=${query[key]}`).join('');
+        const calculatedSignature = crypto.createHmac('sha256', APP_CLIENT_SECRET).update(sortedParams).digest('hex');
+
+	// Compare signatures securely
+        if (!crypto.timingSafeEqual(Buffer.from(calculatedSignature, "utf8"), Buffer.from(signature, "utf8"))) {
+            console.log('Invalid Shopify signature');
+            return res.status(403).send("Invalid signature");
+        }
+
+	console.log("Shopify request verified");
+	// Proceed
+	next()
+}
+
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 // Middleware to parse JSON requests
 app.use(express.json());
+
+// Middleware to verify Shopify requests
+app.use(verifyShopifySignature);
 
 // Check if a customer has purchased a specific product
 app.post("/check-purchase", async (req, res) => {
