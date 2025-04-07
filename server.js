@@ -1,5 +1,9 @@
 import express from "express";
-import { hasPurchased, getCourseById, verifyShopifyRequest } from "./utils.js";
+import {
+    hasPurchased,
+    getCourseById,
+    verifyShopifyRequest
+} from "./utils.js";
 import cors from "cors";
 import fs from "fs";
 import https from "https";
@@ -10,13 +14,13 @@ dotenv.config();
 
 const app = express();
 const allowedOrigins = ["https://latinmixacademy.com", "http://localhost:3000/"];
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === "production";
 const APP_CLIENT_SECRET = process.env.APP_CLIENT_SECRET || 'hush'
 
 let server;
 
-if (isProduction) { 
+if (isProduction) {
     // Load SSL certificate and private key
     const options = {
         key: fs.readFileSync(process.env.SSL_KEY_PATH),
@@ -24,7 +28,7 @@ if (isProduction) {
     };
 
     server = https.createServer(options, app);
-}
+} 
 else {
     server = app;
 }
@@ -33,30 +37,41 @@ else {
 app.use(express.json())
 
 // Middleware to parse URL-encoded form data
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}));
 
 // CORS
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
 
 // Middleware to verify Shopify requests
 app.use(verifyShopifyRequest);
 
 // Check if a customer has purchased a specific product
 app.post("/check-purchase", async (req, res) => {
-  const { customerId, productId } = req.body;
+    const { customerId, productId } = req.body;
 
-  if (!customerId || !productId) {
-    return res.status(400).json({ error: "Missing customerId or productId" });
-  }
+    if (!customerId || !productId) {
+        return res.status(400).json({
+            error: "Missing customerId or productId"
+        });
+    }
 
-  try {
-    const purchased = await hasPurchased(customerId, productId);
-    res.status(200).json({ hasPurchased: purchased });
-  } 
-  catch (error) {
-    console.error("Error checking purchase:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+    try {
+        const purchased = await hasPurchased(customerId, productId);
+        res.status(200).json({
+            hasPurchased: purchased
+        });
+    } 
+    catch (error) {
+        console.error("Error checking purchase:", error);
+        res.status(500).json({
+            error: "Internal server error"
+        });
+    }
 });
 
 // Fetch a specific course by ID
@@ -69,7 +84,9 @@ app.get("/course/:id", async (req, res) => {
     } 
     catch (error) {
         console.error("Error fetching course:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({
+            error: "Internal server error"
+        });
     }
 });
 
@@ -88,13 +105,27 @@ app.get("/student/:id", async (req, res) => {
 
 // Create new Airtable record for onboarding
 app.post("/student/onboarding", async (req, res) => {
-    const { firstName, lastName, email, phone, studentLoc, prefStartDate, prefInstructor, program, goals, expLevel, musicPreferences, equipmentAccess, hoursAvail  } = req.body
-    
+    const {
+        firstName,
+        lastName,
+        email,
+        phone,
+        studentLoc,
+        prefStartDate,
+        prefInstructor,
+        program,
+        goals,
+        expLevel,
+        musicPreferences,
+        equipmentAccess,
+        hoursAvail
+    } = req.body
+
     try {
-	const enrolled  = await createEnrollment();
-	res.status(201).json(enrolled);
-    }
-    catch(error) {
+        const enrolled = await createEnrollment();
+        res.status(201).json(enrolled);
+    } 
+    catch (error) {
         res.status(500).json(error.message);
     }
 
