@@ -6,6 +6,8 @@ import crypto from "crypto"
 
 dotenv.config();
 
+const APP_CLIENT_SECRET = process.env.APP_CLIENT_SECRET || 'hush'
+
 const base = new Airtable({
   apiKey: process.env.AIRTABLE_ACCESS_TOKEN
 }).base(process.env.AIRTABLE_BASE_ID);

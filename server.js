@@ -16,7 +16,7 @@ const app = express();
 const allowedOrigins = ["https://latinmixacademy.com"];
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === "production";
-const APP_CLIENT_SECRET = process.env.APP_CLIENT_SECRET || 'hush'
+
 
 let server;
 
