@@ -102,4 +102,73 @@ async function getStudentById(studentId) {
     }
 }
 
-export { hasPurchased, getCourseById, getStudentById };
+// Middleware to verify shopify requests
+const verifyShopifyRequest = (req, res, next) => {
+        const query = { ...req.query }
+        const signature = query.signature
+
+        if(!signature) {
+           return res.status(403).json({ error: "Missing signature" })
+        }
+
+        delete query.signature
+
+        const sortedParams = Object.keys(query).sort().map(key => `${key}=${query[key]}`).join('');
+        const calculatedSignature = crypto.createHmac('sha256', APP_CLIENT_SECRET).update(sortedParams).digest('hex');
+
+        // Compare signatures securely
+        if (!crypto.timingSafeEqual(Buffer.from(calculatedSignature, "utf8"), Buffer.from(signature, "utf8"))) {
+            return res.status(403).send("Invalid signature");
+        }
+
+        // Proceed
+        next()
+}
+
+// Create enrollment
+async function createEnrollment() {
+    try {
+	 const records = await base('Students').create([
+               
+                    {
+    			"fields": {
+      "Email": "ajernandez@gmail.com",
+      "Phone Number": "(404) 236-5595",
+      "Location": "Suwanee, GA",
+      "Program(s)": [
+        "recAbIgaQEDjrTuh1"
+      ],
+      "Status": "Onboarding",
+      "Instructor": [
+        "recV97XJ3g9QBPJmV"
+      ],
+      "Lessons": [
+        "recsyZLK5v5gn1QOp"
+      ],
+      "First Name": "Andrew",
+      "Last Name": "Hernandez",
+      "Start Date": "2025-01-20",
+      "Lesson Confirmation": "10 Lessons",
+      "Primary Goal": "Master the use of DJ equipment, including turntables, mixers, and software, to seamlessly mix and transition between tracks. Gain skills in beatmatchi...",
+      "Experience": "Beginner",
+      "Music Preference": [
+        "Salsa",
+        "Bachata",
+        "Electric/Dance"
+      ],
+      "Dedicated Time": "3-5 hours",
+      "Equipment": "Yes",
+      "Type of Equipment": "DJ Controller, Turntables, Mixer\n",
+      "Goals/Preferences": "Prefer learning through images, diagrams, charts, and videos. They benefit from demonstrations and visually organized information. For DJing, visual l..."
+    }
+  }
+	       }
+	 ])
+    }
+    catch(error) {
+    
+    }
+
+}
+
+export { hasPurchased, getCourseById, getStudentById, verifyShopifyRequest };

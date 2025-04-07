@@ -1,5 +1,5 @@
 import express from "express";
-import { hasPurchased, getCourseById } from "./utils.js";
+import { hasPurchased, getCourseById, verifyShopifyRequest } from "./utils.js";
 import cors from "cors";
 import fs from "fs";
 import https from "https";
@@ -29,39 +29,17 @@ else {
     server = app;
 }
 
-// Middle to parse json data
+// Middleware to parse json data
 app.use(express.json())
 
-// Middleware to verify shopify requests
-const verifyShopifySignature = (req, res, next) => {
-	const query = { ...req.query }
-	const signature = query.signature
+// Middleware to parse URL-encoded form data
+app.use(express.urlencoded({ extended: true }));
 
-	if(!signature) {
-	   return res.status(403).json({ error: "Missing signature" })
-	}
-
-	delete query.signature
-
-	const sortedParams = Object.keys(query).sort().map(key => `${key}=${query[key]}`).join('');
-        const calculatedSignature = crypto.createHmac('sha256', APP_CLIENT_SECRET).update(sortedParams).digest('hex');
-
-	// Compare signatures securely
-        if (!crypto.timingSafeEqual(Buffer.from(calculatedSignature, "utf8"), Buffer.from(signature, "utf8"))) {
-            return res.status(403).send("Invalid signature");
-        }
-
-	// Proceed
-	next()
-}
-
+// CORS
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
-// Middleware to parse JSON requests
-app.use(express.json());
-
 // Middleware to verify Shopify requests
-app.use(verifyShopifySignature);
+app.use(verifyShopifyRequest);
 
 // Check if a customer has purchased a specific product
 app.post("/check-purchase", async (req, res) => {
@@ -106,6 +84,20 @@ app.get("/student/:id", async (req, res) => {
     catch (error) {
         res.status(500).json(error.message);
     }
+});
+
+// Create new Airtable record for onboarding
+app.post("/student/onboarding", async (req, res) => {
+    const { firstName, lastName, email, phone, studentLoc, prefStartDate, prefInstructor, program, goals, expLevel, musicPreferences, equipmentAccess, hoursAvail  } = req.body
+    
+    try {
+	const enrolled  = await createEnrollment();
+	res.status(201).json(enrolled);
+    }
+    catch(error) {
+        res.status(500).json(error.message);
+    }
+
 });
 
 server.listen(PORT, () => {
