@@ -105,7 +105,7 @@ async function getStudentById(studentId) {
 }
 
 // Middleware to verify shopify requests
-const verifyShopifyRequest = (req, res, next) => {
+function verifyShopifyRequest(req, res, next) {
   const query = { ...req.query }
   const signature = query.signature
 
@@ -130,13 +130,58 @@ const verifyShopifyRequest = (req, res, next) => {
 }
 
 // Create enrollment
-async function createEnrollment() {
+async function createEnrollment(formData) {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    studentLoc,
+    prefStartDate,
+    prefInstructor,
+    program,
+    goals,
+    expLevel,
+    musicPreferences,
+    hoursAvail,
+    equipmentAccess
+  } = formData
 
+  try {
+    const records = await base('Students').create([{
+      "fields": {
+        "Email": email,
+        "Phone Number": phone,
+        "Location": studentLoc,
+        "Program(s)": program,
+        "Status": "Onboarding",
+        "Instructor": prefInstructor,
+        "Lessons": [],
+        "First Name": firstName,
+        "Last Name": lastName,
+        "Start Date": prefStartDate,
+        "Lesson Confirmation": "",
+        "Primary Goal": goals,
+        "Experience": expLevel,
+        "Music Preference": musicPreferences,
+        "Dedicated Time": hoursAvail,
+        "Equipment": equipmentAccess,
+        "Type of Equipment": "",
+        "Goals/Preferences": ""
+      }
+    }])
+    
+    return records
+  } 
+  catch (error) {
+    throw error;
+  }
 }
 
 export {
   hasPurchased,
   getCourseById,
   getStudentById,
-  verifyShopifyRequest
+  verifyShopifyRequest,
+  createEnrollment
 };

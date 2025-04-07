@@ -2,7 +2,8 @@ import express from "express";
 import {
     hasPurchased,
     getCourseById,
-    verifyShopifyRequest
+    verifyShopifyRequest,
+    createEnrollment
 } from "./utils.js";
 import cors from "cors";
 import fs from "fs";
@@ -105,25 +106,11 @@ app.get("/student/:id", async (req, res) => {
 
 // Create new Airtable record for onboarding
 app.post("/student/onboarding", async (req, res) => {
-    const {
-        firstName,
-        lastName,
-        email,
-        phone,
-        studentLoc,
-        prefStartDate,
-        prefInstructor,
-        program,
-        goals,
-        expLevel,
-        musicPreferences,
-        equipmentAccess,
-        hoursAvail
-    } = req.body
+    const formData = req.body
 
     try {
-        const enrolled = await createEnrollment();
-        res.status(201).json(enrolled);
+        const records = await createEnrollment(formData);
+        res.status(201).json(records);
     } 
     catch (error) {
         res.status(500).json(error.message);
