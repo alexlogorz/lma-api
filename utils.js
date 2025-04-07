@@ -2,6 +2,7 @@
 import axios from 'axios';
 import dotenv from "dotenv";
 import Airtable from 'airtable';
+import crypto from "crypto"
 
 dotenv.config();
 
@@ -170,7 +171,7 @@ async function createEnrollment(formData) {
         "Goals/Preferences": ""
       }
     }])
-    
+
     return records
   } 
   catch (error) {
