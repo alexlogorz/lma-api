@@ -109,10 +109,10 @@ app.post("/student/onboarding", async (req, res) => {
     console.log('formData', formData)
     try {
         const records = await createEnrollment(formData);
-        res.status(201).json(records);
+        res.status(201).json({ message: "Enrollment created", data: records});
     } 
     catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).json({ error: error.message });
     }
 
 });
