@@ -168,7 +168,7 @@ async function createEnrollment(formData) {
         "Music Preference": [...musicPreferences],
         "Dedicated Time": hoursAvail,
         "Equipment": equipmentAccess,
-        "Student ID": studentId
+        "Student ID": studentId.toString()
       }
     }])
 
