@@ -106,7 +106,7 @@ app.get("/student/:id", async (req, res) => {
 // Create new Airtable record for onboarding
 app.post("/student/onboarding", async (req, res) => {
     const formData = req.body
-
+    console.log('formData', formData)
     try {
         const records = await createEnrollment(formData);
         res.status(201).json(records);
