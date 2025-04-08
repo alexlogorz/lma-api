@@ -96,10 +96,10 @@ app.get("/student/:id", async (req, res) => {
     catch (error) {
         res.status(500).json(error.message);
     }
-});
+}); 
 
 // Create new Airtable record for onboarding
-app.post("/apps/lma-api/student/onboarding", async (req, res) => {
+app.post("/student/onboarding", async (req, res) => {
     const formData = req.body
    
     try {

@@ -158,7 +158,7 @@ async function createEnrollment(formData) {
         "Location": studentLoc,
         "Program(s)": [program],
         "Status": "Onboarding",
-        "Instructor": prefInstructor,
+        "Instructor": [prefInstructor],
         "Lessons": [],
         "First Name": firstName,
         "Last Name": lastName,
