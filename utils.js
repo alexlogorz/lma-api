@@ -156,7 +156,7 @@ async function createEnrollment(formData) {
         "Email": email,
         "Phone Number": phone,
         "Location": studentLoc,
-        "Program(s)": program,
+        "Program(s)": [program],
         "Status": "Onboarding",
         "Instructor": prefInstructor,
         "Lessons": [],
@@ -166,17 +166,13 @@ async function createEnrollment(formData) {
         "Lesson Confirmation": "",
         "Primary Goal": goals,
         "Experience": expLevel,
-        "Music Preference": musicPreferences,
+        "Music Preference": [musicPreferences],
         "Dedicated Time": hoursAvail,
         "Equipment": equipmentAccess,
         "Type of Equipment": "",
         "Goals/Preferences": ""
       }
     }])
-
-    if(records.length < 1) {
-      throw new Error("Trouble onboarding the student")
-    }
 
     return records
   } 
