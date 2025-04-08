@@ -17,7 +17,7 @@ const base = new Airtable({
 }).base(process.env.AIRTABLE_BASE_ID);
 
 async function updateOnboardingMetafield(customerId) {
-  const url = `https://${shopDomain}/admin/api/2024-01/customers/${customerId}/metafields/63469814016.json`;
+  const url = `https://${shopDomain}/admin/api/2024-01/customers/${customerId}/metafields.json`;
 
   const payload = {
     metafield: {
