@@ -10,6 +10,7 @@ dotenv.config();
 
 const accessToken = process.env.SHOPIFY_ADMIN_TOKEN; // Shopify admin token
 const shopDomain = process.env.SHOPIFY_STORE; // Store name
+const APP_CLIENT_SECRET = process.env.APP_CLIENT_SECRET
 
 const base = new Airtable({
   apiKey: process.env.AIRTABLE_ACCESS_TOKEN
