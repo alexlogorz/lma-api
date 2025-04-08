@@ -17,13 +17,12 @@ const base = new Airtable({
 }).base(process.env.AIRTABLE_BASE_ID);
 
 async function updateOnboardingMetafield(customerId) {
-  const url = `https://${shopDomain}/admin/api/2024-01/customers/${customerId}/metafields.json`;
+  const metafieldId = '63469814016'; // existing metafield ID
+  const url = `https://${shopDomain}/admin/api/2024-01/metafields/${metafieldId}.json`;
 
   const payload = {
     metafield: {
-      id: '63469814016',
-      namespace: 'custom',
-      key: 'onboarding_completed',
+      id: metafieldId,
       value: true,
       type: 'boolean'
     }
@@ -35,16 +34,15 @@ async function updateOnboardingMetafield(customerId) {
         'X-Shopify-Access-Token': accessToken,
         'Content-Type': 'application/json'
       }
-    })
+    });
 
-    return response.data.metafield
+    return response.data.metafield;
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    throw error;
   }
-  catch(error) {
-    throw error
-  }
-
-
 }
+
 
 async function hasPurchased(customerId, productId) {
  
