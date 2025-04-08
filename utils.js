@@ -147,7 +147,8 @@ async function createEnrollment(formData) {
     expLevel,
     musicPreferences,
     hoursAvail,
-    equipmentAccess
+    equipmentAccess,
+    studentId
   } = formData
 
   try {
@@ -167,6 +168,7 @@ async function createEnrollment(formData) {
         "Music Preference": [...musicPreferences],
         "Dedicated Time": hoursAvail,
         "Equipment": equipmentAccess,
+        "Student ID": studentId
       }
     }])
 
