@@ -166,7 +166,7 @@ async function createEnrollment(formData) {
         "Lesson Confirmation": "",
         "Primary Goal": goals,
         "Experience": expLevel,
-        "Music Preference": [musicPreferences],
+        "Music Preference": [...musicPreferences],
         "Dedicated Time": hoursAvail,
         "Equipment": equipmentAccess,
         "Type of Equipment": "",
