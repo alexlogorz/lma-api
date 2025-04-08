@@ -174,6 +174,10 @@ async function createEnrollment(formData) {
       }
     }])
 
+    if(records.length < 1) {
+      throw new Error("Trouble onboarding the student")
+    }
+
     return records
   } 
   catch (error) {
