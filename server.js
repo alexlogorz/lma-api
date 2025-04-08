@@ -104,6 +104,12 @@ app.post("/student/onboarding", async (req, res) => {
    
     try {
         const records = await createEnrollment(formData); 
+        
+        // update shopify metafield
+        if(records.length > 0) {
+            
+        }
+        
         res.status(201).send("Enrollment created successfully!");
     } 
     catch (error) {

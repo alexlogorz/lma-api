@@ -6,16 +6,15 @@ import crypto from "crypto"
 
 dotenv.config();
 
-const APP_CLIENT_SECRET = process.env.APP_CLIENT_SECRET || 'hush'
+const accessToken = process.env.SHOPIFY_ADMIN_TOKEN; // Shopify admin token
+const shopDomain = process.env.SHOPIFY_STORE; // Store name
 
 const base = new Airtable({
   apiKey: process.env.AIRTABLE_ACCESS_TOKEN
 }).base(process.env.AIRTABLE_BASE_ID);
 
 async function hasPurchased(customerId, productId) {
-  const accessToken = process.env.APP_CLIENT_ID; // Api key from appv
-  const shopDomain = process.env.SHOPIFY_STORE; // Store domain (e.g., mystore.myshopify.com)
-
+ 
   const url = `https://${shopDomain}/admin/api/2023-01/orders.json`;
 
   try {
