@@ -99,7 +99,7 @@ app.get("/student/:id", async (req, res) => {
 });
 
 // Create new Airtable record for onboarding
-app.post("/student/onboarding", async (req, res) => {
+app.post("/apps/lma-api/student/onboarding", async (req, res) => {
     const formData = req.body
    
     try {
