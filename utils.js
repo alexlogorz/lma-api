@@ -3,6 +3,8 @@ import axios from 'axios';
 import dotenv from "dotenv";
 import Airtable from 'airtable';
 import crypto from "crypto"
+import '@shopify/shopify-api/adapters/node';
+import { shopifyApi, LATEST_API_VERSION } from '@shopify/shopify-api';
 
 dotenv.config();
 
@@ -13,9 +15,39 @@ const base = new Airtable({
   apiKey: process.env.AIRTABLE_ACCESS_TOKEN
 }).base(process.env.AIRTABLE_BASE_ID);
 
+async function updateOnboardingMetafield(customerId) {
+  const url = `https://${shopDomain}/admin/api/2024-01/customers/${customerId}/metafields/63469814016.json`;
+
+  const payload = {
+    metafield: {
+      id: '63469814016',
+      namespace: 'custom',
+      key: 'onboarding_completed',
+      value: true,
+      type: 'boolean'
+    }
+  };
+
+  try {
+    const response = await axios.put(url, payload, {
+      headers: {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    return response.data.metafield
+  }
+  catch(error) {
+    throw error
+  }
+
+
+}
+
 async function hasPurchased(customerId, productId) {
  
-  const url = `https://${shopDomain}/admin/api/2023-01/orders.json`;
+  const url = `https://${shopDomain}/admin/api/2024-01/orders.json`;
 
   try {
     // Fetch orders for the given customer ID
@@ -183,5 +215,6 @@ export {
   getCourseById,
   getStudentById,
   verifyShopifyRequest,
-  createEnrollment
+  createEnrollment,
+  updateOnboardingMetafield
 };

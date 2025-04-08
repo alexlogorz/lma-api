@@ -3,7 +3,8 @@ import {
     hasPurchased,
     getCourseById,
     verifyShopifyRequest,
-    createEnrollment
+    createEnrollment,
+    updateOnboardingMetafield
 } from "./utils.js";
 import cors from "cors";
 import fs from "fs";
@@ -101,14 +102,11 @@ app.get("/student/:id", async (req, res) => {
 // Create new Airtable record for onboarding
 app.post("/student/onboarding", async (req, res) => {
     const formData = req.body
-   
+    const { studentId } = req.body
+
     try {
         const records = await createEnrollment(formData); 
-        
-        // update shopify metafield
-        if(records.length > 0) {
-            
-        }
+        const metafield = await updateOnboardingMetafield(studentId);
         
         res.status(201).send("Enrollment created successfully!");
     } 
