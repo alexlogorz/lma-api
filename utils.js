@@ -159,18 +159,14 @@ async function createEnrollment(formData) {
         "Program(s)": [program],
         "Status": "Onboarding",
         "Instructor": [prefInstructor],
-        "Lessons": [],
         "First Name": firstName,
         "Last Name": lastName,
         "Start Date": prefStartDate,
-        "Lesson Confirmation": "",
         "Primary Goal": goals,
         "Experience": expLevel,
         "Music Preference": [...musicPreferences],
         "Dedicated Time": hoursAvail,
         "Equipment": equipmentAccess,
-        "Type of Equipment": "",
-        "Goals/Preferences": ""
       }
     }])
 
