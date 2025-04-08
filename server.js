@@ -36,11 +36,6 @@ else {
 // Middleware to parse json data
 app.use(express.json())
 
-// Middleware to parse URL-encoded form data
-app.use(express.urlencoded({
-    extended: true
-}));
-
 // CORS
 app.use(cors({
     origin: allowedOrigins,
@@ -106,15 +101,15 @@ app.get("/student/:id", async (req, res) => {
 // Create new Airtable record for onboarding
 app.post("/student/onboarding", async (req, res) => {
     const formData = req.body
-    console.log('formData', formData)
+   
     try {
-        const records = await createEnrollment(formData);
-        res.status(201).json({ message: "Enrollment created", data: records});
+        const records = await createEnrollment(formData); 
+        res.status(201).send("Enrollment created successfully!");
     } 
     catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Server error:", error); 
+        res.status(500).send("Error creating enrollment: " + error.message);
     }
-
 });
 
 server.listen(PORT, () => {
