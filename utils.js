@@ -17,16 +17,15 @@ const base = new Airtable({
 }).base(process.env.AIRTABLE_BASE_ID);
 
 async function updateOnboardingMetafield(customerId) {
-  const metafieldId = '63469814016'; // existing metafield ID
+  const metafieldId = '29600026886400'; // existing metafield ID
   const url = `https://${shopDomain}/admin/api/2024-01/metafields/${metafieldId}.json`;
-
   const payload = {
     metafield: {
       id: metafieldId,
       value: true,
       type: 'boolean'
     }
-  };
+  }
 
   try {
     const response = await axios.put(url, payload, {
